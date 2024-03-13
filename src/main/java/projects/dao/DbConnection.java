@@ -15,11 +15,11 @@ public class DbConnection {
 
 	public static Connection getConnection() {
 		String uri = String.format("jdbc:mysql://%s:%d/%s?user=%s&password=%s&useSSL=false",HOST,PORT,SCHEMA,USER,PASSWORD);
+		
 		try {
 			Connection conn = DriverManager.getConnection(uri);
 			System.out.println("Connection successful!");
 			return conn;
-			
 		} catch (SQLException e) {
 			System.out.println("Connection failed.");
 			throw new DbException(e);
