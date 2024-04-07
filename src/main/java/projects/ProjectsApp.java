@@ -1,7 +1,6 @@
 package projects;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
@@ -56,7 +55,19 @@ public class ProjectsApp {
 		String projectName = getStringInput("Enter the project name");
 		BigDecimal estimatedHours = getDecimalInput("Enter the estimated hours");
 		BigDecimal actualHours = getDecimalInput("Enter the actual hours");
-		Integer difficulty = getIntInput("Enter the project difficulty (1-5)");
+		Integer difficulty;
+		boolean valid = false;
+		do {
+			difficulty = getIntInput("Enter the project difficulty (1-5)");
+			
+			if(difficulty >= 1 && difficulty <= 5) {
+				valid = true;
+			} else {
+				System.out.println("\nInvalid entry. Try again.");
+			}
+
+		} while(!valid);
+		
 		String notes = getStringInput("Enter the project notes");
 		
 		Project project = new Project();
@@ -123,11 +134,6 @@ public class ProjectsApp {
 		}
 		
 		return input.isBlank() ? null : input.trim();
-	}
-
-	private String getStringInput() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	private void printOperation() {
