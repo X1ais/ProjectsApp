@@ -14,7 +14,9 @@ public class ProjectsApp {
 	private List<String> operations = List.of(
 		"1) Add a project",
 		"2) List projects",
-		"3) Select a project"
+		"3) Select a project",
+		"4) Update project details",
+		"5) Delete a project"
 	);
 	// @formatter:on
 	
@@ -47,6 +49,12 @@ public class ProjectsApp {
 				case 3:
 					selectProject();
 					break;
+				case 4:
+					updateProjectDetails();
+					break;
+				case 5:
+					deleteProject();
+					break;
 				default:
 					System.out.println("\n " + selection + " is not a valid selection. Try again.");
 				
@@ -58,6 +66,60 @@ public class ProjectsApp {
 			
 		}
 		
+	}
+
+	private void deleteProject() {
+		listProjects();
+		
+		Integer projectId = getIntInput("Enter the project ID to delete");
+		
+		if(Objects.nonNull(projectId)) {
+			projectService.deleteProject(projectId);
+			
+			System.out.println("Your project has been deleted.");
+		}
+		
+		if(Objects.nonNull(currentProject) && currentProject.getProjectId().equals(projectId)) {
+			currentProject = null;
+		}
+		
+		
+	}
+
+	private void updateProjectDetails() {
+		if(Objects.isNull(currentProject)) {
+			System.out.println("\nPlease select a project.");
+			return;
+		}
+		
+		String projectName = getStringInput("Enter the project name [" + currentProject.getProjectName() + "]. Press enter if unchanged");
+		BigDecimal projectEstimatedHours = getDecimalInput("Enter the estimated hours [" + currentProject.getEstimatedHours() + "]. Press enter if unchanged");
+		BigDecimal projectActualHours = getDecimalInput("Enter the actual hours [" + currentProject.getActualHours() + "]. Press enter if unchanged");
+		Integer projectDifficulty;
+		boolean valid = false;
+		do {
+			projectDifficulty = getIntInput("Enter the project difficulty [" + currentProject.getDifficulty() + "]. Press enter if unchanged");
+			
+			if(projectDifficulty >= 1 && projectDifficulty <= 5) {
+				valid = true;
+			} else {
+				System.out.println("\nInvalid difficulty entry. Try again.");
+			}
+
+		} while(!valid);
+		
+		String projectNotes = getStringInput("Enter the project notes [" + currentProject.getNotes() + "]. Press enter if unchanged");
+		
+		Project project = new Project();
+		project.setProjectName(Objects.isNull(projectName) ? currentProject.getProjectName() : projectName);
+		project.setEstimatedHours(Objects.isNull(projectEstimatedHours) ? currentProject.getEstimatedHours() : projectEstimatedHours);
+		project.setActualHours(Objects.isNull(projectActualHours) ? currentProject.getActualHours() : projectActualHours);
+		project.setDifficulty(Objects.isNull(projectDifficulty) ? currentProject.getDifficulty() : projectDifficulty);
+		project.setNotes(Objects.isNull(projectNotes) ? currentProject.getNotes() : projectNotes);
+		project.setProjectId(currentProject.getProjectId());
+		
+		projectService.modifyProjectDetails(project);
+		currentProject = projectService.fetchProjectById(currentProject.getProjectId());
 	}
 
 	private void selectProject() {
@@ -90,7 +152,7 @@ public class ProjectsApp {
 			if(difficulty >= 1 && difficulty <= 5) {
 				valid = true;
 			} else {
-				System.out.println("\nInvalid entry. Try again.");
+				System.out.println("\nInvalid difficulty entry. Try again.");
 			}
 
 		} while(!valid);
