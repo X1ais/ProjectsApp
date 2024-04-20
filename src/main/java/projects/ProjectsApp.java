@@ -95,12 +95,14 @@ public class ProjectsApp {
 		String projectName = getStringInput("Enter the project name [" + currentProject.getProjectName() + "]. Press enter if unchanged");
 		BigDecimal projectEstimatedHours = getDecimalInput("Enter the estimated hours [" + currentProject.getEstimatedHours() + "]. Press enter if unchanged");
 		BigDecimal projectActualHours = getDecimalInput("Enter the actual hours [" + currentProject.getActualHours() + "]. Press enter if unchanged");
-		Integer projectDifficulty;
+		Integer projectDifficulty = null;
 		boolean valid = false;
 		do {
 			projectDifficulty = getIntInput("Enter the project difficulty [" + currentProject.getDifficulty() + "]. Press enter if unchanged");
 			
-			if(projectDifficulty >= 1 && projectDifficulty <= 5) {
+			if(Objects.isNull(projectDifficulty)) {
+				valid = true;
+			} else if(projectDifficulty >= 1 && projectDifficulty <= 5) {
 				valid = true;
 			} else {
 				System.out.println("\nInvalid difficulty entry. Try again.");
